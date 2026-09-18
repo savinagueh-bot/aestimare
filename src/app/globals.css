@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --color-ink: #0f172a;
+  --color-panel: #111827;
+  --color-amber: #d97706;
+  --color-amber-2: #f59e0b;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: #f3f4f6;
+  color: #0f172a;
+  font-family: var(--font-sans);
+}
+
+:root {
+  --tap: 44px;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  min-height: 0;
+}
+
+.tap {
+  min-height: var(--tap);
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
+}
