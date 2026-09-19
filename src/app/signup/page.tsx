@@ -16,7 +16,7 @@ export default function SignupPage() {
     phone: "",
     password: "",
     confirm: "",
-    role: "office" as Role,
+    role: "owner" as Role,
   });
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -54,7 +54,7 @@ export default function SignupPage() {
   return (
     <AuthFrame
       title="Create an account"
-      subtitle="New office or field users can join the Iowa Structured Cabling workspace."
+      subtitle="Creates a live Supabase login. The workspace starts empty so you can enter real jobs."
       footer={
         <>
           Already have an account?{" "}
@@ -82,9 +82,9 @@ export default function SignupPage() {
         </Field>
         <Field label="Role">
           <select className={inputCls} value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value as Role })}>
+            <option value="owner">Owner / CEO</option>
             <option value="office">Office</option>
             <option value="technician">Technician</option>
-            <option value="owner">Owner</option>
           </select>
         </Field>
         <Field label="Password">
