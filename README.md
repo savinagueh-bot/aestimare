@@ -2,7 +2,7 @@
 
 All-in-one project management for **Iowa Structured Cabling LLC** — structured cabling, fiber, Wi-Fi, cameras, access control, and AV.
 
-Hosted at https://github.com/savinagueh-bot/aestimare
+Repo: https://github.com/savinagueh-bot/aestimare
 
 ## Run locally
 
@@ -12,3 +12,7 @@ npm run dev
 ```
 
 Open http://localhost:3000
+
+## Vercel
+
+Production deploys from `main`. Framework: Next.js. Root directory: repository root. Demo mode works without env vars.
