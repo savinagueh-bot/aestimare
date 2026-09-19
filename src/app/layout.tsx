@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { StoreProvider } from "@/lib/store";
+import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "Aestimare — Low-voltage project management",
@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <StoreProvider>{children}</StoreProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

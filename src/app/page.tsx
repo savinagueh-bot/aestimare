@@ -2,11 +2,11 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth-context";
 
 export default function Home() {
   const router = useRouter();
-  const { ready, session } = useStore();
+  const { ready, session } = useAuth();
 
   useEffect(() => {
     if (!ready) return;

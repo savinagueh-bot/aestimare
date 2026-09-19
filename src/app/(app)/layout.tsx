@@ -3,11 +3,11 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Shell } from "@/components/Shell";
-import { useStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth-context";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { ready, session } = useStore();
+  const { ready, session } = useAuth();
 
   useEffect(() => {
     if (!ready) return;
