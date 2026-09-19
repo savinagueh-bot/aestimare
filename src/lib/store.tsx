@@ -39,6 +39,17 @@ type Store = AppState & {
   updateCableRun: (id: string, patch: Partial<CableRun>) => void;
   createInvoiceFromEstimate: (estimateId: string, kind: Invoice["kind"]) => string;
   createInvoiceFromProject: (projectId: string) => string;
+  createInvoice: (input: {
+    clientName: string;
+    email?: string;
+    siteAddress?: string;
+    kind?: Invoice["kind"];
+    description: string;
+    amount: number;
+    notes?: string;
+    projectId?: string;
+    estimateId?: string;
+  }) => string;
   setInvoiceStatus: (id: string, status: Invoice["status"]) => void;
   markInvoicePaid: (id: string, method?: "card" | "ach") => void;
   logHours: (projectId: string, technicianId: string, hours: number, notes?: string) => void;
@@ -312,6 +323,36 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
                   unitPrice: li.unitCost * (1 + li.markupPct / 100) + li.laborHours * li.laborRate,
                 }))
               : [{ id: uid("ili"), description: p.name, qty: 1, unitPrice: totals.total }],
+          };
+          return { ...s, invoices: [inv, ...s.invoices] };
+        });
+        return id;
+      },
+      createInvoice: (input) => {
+        const id = uid("inv");
+        setState((s) => {
+          const inv: Invoice = {
+            id,
+            number: nextNumber("INV", s.invoices.map((i) => i.number)),
+            projectId: input.projectId,
+            estimateId: input.estimateId,
+            clientName: input.clientName,
+            email: input.email ?? "",
+            siteAddress: input.siteAddress ?? "",
+            kind: input.kind ?? "single",
+            status: "draft",
+            taxRate: s.taxRateDefault,
+            notes: input.notes ?? "",
+            dueDate: addDaysISO(14),
+            issuedAt: new Date().toISOString(),
+            lineItems: [
+              {
+                id: uid("ili"),
+                description: input.description,
+                qty: 1,
+                unitPrice: Math.round(input.amount * 100) / 100,
+              },
+            ],
           };
           return { ...s, invoices: [inv, ...s.invoices] };
         });
