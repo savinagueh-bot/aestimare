@@ -2,9 +2,11 @@
 
 import { Btn, Card, PageHeader } from "@/components/ui";
 import { useStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth-context";
 
 export default function SettingsPage() {
   const { resetDemo, currentUser, laborRateDefault, taxRateDefault } = useStore();
+  const { session, signOut } = useAuth();
   return (
     <div>
       <PageHeader title="Settings" subtitle="Company defaults and demo workspace controls." />
@@ -19,15 +21,32 @@ export default function SettingsPage() {
           </dl>
         </Card>
         <Card className="p-4">
-          <h2 className="font-semibold">Defaults</h2>
+          <h2 className="font-semibold">Account</h2>
+          <p className="mt-2 text-sm">Signed in as {currentUser.name} ({currentUser.role})</p>
+          {session?.email ? <p className="text-sm text-slate-500">{session.email}</p> : null}
           <p className="mt-2 text-sm">Labor rate ${laborRateDefault}/hr</p>
           <p className="text-sm">Tax rate {taxRateDefault}%</p>
-          <p className="mt-2 text-sm text-slate-500">Signed in as {currentUser.name} ({currentUser.role}).</p>
+          <Btn
+            className="mt-3"
+            variant="ghost"
+            onClick={async () => {
+              await signOut();
+              window.location.href = "/login";
+            }}
+          >
+            Sign out
+          </Btn>
         </Card>
         <Card className="p-4">
           <h2 className="font-semibold">Demo data</h2>
           <p className="mt-2 text-sm text-slate-600">This browser keeps your edits in localStorage.</p>
-          <Btn className="mt-3" variant="danger" onClick={() => { if (confirm("Reset demo workspace?")) resetDemo(); }}>
+          <Btn
+            className="mt-3"
+            variant="danger"
+            onClick={() => {
+              if (confirm("Reset demo workspace?")) resetDemo();
+            }}
+          >
             Reset workspace
           </Btn>
         </Card>

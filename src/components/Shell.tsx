@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth-context";
 import { cn } from "./ui";
 
 const NAV = [
@@ -34,6 +35,7 @@ const NAV = [
 export function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const { currentUser, users, setUser } = useStore();
+  const { signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const items = NAV.filter((n) => n.roles.includes(currentUser.role));
 
@@ -46,7 +48,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <NavLink key={n.href} href={n.href} active={path.startsWith(n.href)} icon={n.icon} label={n.label} />
           ))}
         </nav>
-        <RoleSwitch users={users} currentId={currentUser.id} onChange={setUser} />
+        <AccountFooter users={users} currentId={currentUser.id} onChange={setUser} onSignOut={signOut} />
       </aside>
 
       <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
@@ -71,10 +73,17 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </div>
             <nav className="flex-1 space-y-0.5 px-2 py-3">
               {items.map((n) => (
-                <NavLink key={n.href} href={n.href} active={path.startsWith(n.href)} icon={n.icon} label={n.label} onClick={() => setOpen(false)} />
+                <NavLink
+                  key={n.href}
+                  href={n.href}
+                  active={path.startsWith(n.href)}
+                  icon={n.icon}
+                  label={n.label}
+                  onClick={() => setOpen(false)}
+                />
               ))}
             </nav>
-            <RoleSwitch users={users} currentId={currentUser.id} onChange={setUser} />
+            <AccountFooter users={users} currentId={currentUser.id} onChange={setUser} onSignOut={signOut} />
           </div>
         </div>
       ) : null}
@@ -128,22 +137,27 @@ function NavLink({
   );
 }
 
-function RoleSwitch({
+function AccountFooter({
   users,
   currentId,
   onChange,
+  onSignOut,
 }: {
   users: { id: string; name: string; role: string }[];
   currentId: string;
   onChange: (id: string) => void;
+  onSignOut: () => Promise<void>;
 }) {
+  const router = useRouter();
+  const current = users.find((u) => u.id === currentId);
   return (
     <div className="border-t border-white/10 p-3">
-      <div className="mb-1 text-[10px] uppercase tracking-wider text-slate-500">View as</div>
+      <div className="mb-1 text-[10px] uppercase tracking-wider text-slate-500">Signed in</div>
+      <div className="mb-2 truncate text-sm font-medium text-white">{current?.name}</div>
       <select
         value={currentId}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-lg border border-white/10 bg-slate-900 px-2 py-2 text-sm text-white"
+        className="mb-2 w-full rounded-lg border border-white/10 bg-slate-900 px-2 py-2 text-sm text-white"
       >
         {users.map((u) => (
           <option key={u.id} value={u.id}>
@@ -151,6 +165,15 @@ function RoleSwitch({
           </option>
         ))}
       </select>
+      <button
+        className="w-full rounded-lg border border-white/15 px-3 py-2 text-sm text-slate-300 hover:bg-white/5"
+        onClick={async () => {
+          await onSignOut();
+          router.replace("/login");
+        }}
+      >
+        Sign out
+      </button>
     </div>
   );
 }
