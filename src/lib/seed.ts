@@ -1,0 +1,87 @@
+import type { AppState } from "./types";
+
+export const SEED: AppState = {
+  currentUserId: "u_owner",
+  laborRateDefault: 95,
+  taxRateDefault: 7,
+  users: [
+    { id: "u_owner", name: "Cyrus W. Gueh Sr", email: "Info@Iowacabling.com", role: "owner", phone: "651-551-1174" },
+    { id: "u_office", name: "Victoria Gueh", email: "office@iowacabling.com", role: "office", phone: "651-551-1174" },
+    { id: "u_tech1", name: "Marcus Hale", email: "marcus@iowacabling.com", role: "technician", phone: "515-555-0142" },
+    { id: "u_tech2", name: "Elena Ruiz", email: "elena@iowacabling.com", role: "technician", phone: "515-555-0188" },
+  ],
+  clients: [
+    {
+      id: "c_meridian",
+      company: "Meridian Office Partners",
+      name: "Dana Whitfield",
+      email: "dana@meridianop.com",
+      phone: "515-555-2201",
+      billingAddress: "4100 Westown Pkwy, West Des Moines, IA 50266",
+      createdAt: "2026-08-12T14:00:00Z",
+    },
+    {
+      id: "c_linden",
+      company: "Linden Family Dentistry",
+      name: "Dr. Priya Shah",
+      email: "office@lindenfamilydent.com",
+      phone: "515-555-7730",
+      billingAddress: "1801 50th St, West Des Moines, IA 50266",
+      createdAt: "2026-09-02T10:00:00Z",
+    },
+    {
+      id: "c_home",
+      name: "James & Kara Ellison",
+      email: "kellison@email.com",
+      phone: "515-555-4419",
+      billingAddress: "2214 SW 26th St, Ankeny, IA 50023",
+      createdAt: "2026-09-10T16:20:00Z",
+    },
+  ],
+  leads: [],
+  priceBook: [
+    { id: "pb_cat6", sku: "CBL-C6", category: "Cable", name: "Cat6 plenum cable", unit: "ft", unitCost: 0.32, markupPct: 55, laborHoursPerUnit: 0, taxable: true, active: true },
+    { id: "pb_drop", sku: "LAB-DROP", category: "Labor", name: "Station drop — pull, terminate, test", unit: "ea", unitCost: 0, markupPct: 0, laborHoursPerUnit: 0.75, taxable: false, active: true },
+    { id: "pb_ap", sku: "EQ-AP6", category: "Equipment", name: "Wi-Fi 6 access point (enterprise)", unit: "ea", unitCost: 189, markupPct: 30, laborHoursPerUnit: 0.6, taxable: true, active: true },
+    { id: "pb_survey", sku: "LAB-SRV", category: "Labor", name: "Site survey", unit: "ea", unitCost: 0, markupPct: 0, laborHoursPerUnit: 2, taxable: false, active: true },
+  ],
+  estimates: [],
+  projects: [
+    {
+      id: "p_ankeny",
+      number: "PRJ-0088",
+      name: "Ankeny warehouse AP remount + 8 drops",
+      clientId: "c_home",
+      siteAddress: "901 SE Oralabor Rd, Ankeny, IA 50021",
+      siteContact: "James Ellison",
+      sitePhone: "515-555-4419",
+      status: "in_progress",
+      jobTypes: ["wifi", "structured_cabling"],
+      startDate: "2026-09-16",
+      targetDate: "2026-09-19",
+      assignedTechIds: ["u_tech1"],
+      scope: "Remount 2 APs to new grid, pull 8 Cat6 drops to existing rack, certify.",
+      createdAt: "2026-09-08T12:00:00Z",
+    },
+  ],
+  tasks: [
+    { id: "t1", projectId: "p_ankeny", title: "Site walk / confirm paths", status: "done", sort: 1, assignedTo: "u_tech1" },
+    { id: "t2", projectId: "p_ankeny", title: "Pull 8 Cat6 drops", status: "done", sort: 2, assignedTo: "u_tech1" },
+    { id: "t3", projectId: "p_ankeny", title: "Terminate + label both ends", status: "in_progress", sort: 3, assignedTo: "u_tech1" },
+    { id: "t4", projectId: "p_ankeny", title: "Remount APs and dress cables", status: "pending", sort: 4, assignedTo: "u_tech1" },
+    { id: "t5", projectId: "p_ankeny", title: "Fluke test / certify", status: "pending", sort: 5, assignedTo: "u_tech1" },
+    { id: "t6", projectId: "p_ankeny", title: "Photo close-out + punch", status: "pending", sort: 6, assignedTo: "u_tech1" },
+  ],
+  cableRuns: [],
+  invoices: [],
+  payments: [],
+  timeEntries: [],
+};
+
+export const TASK_TEMPLATES: Record<string, string[]> = {
+  structured_cabling: ["Site survey / path confirmation", "Pull cable", "Terminate both ends", "Certify / Fluke test", "As-built + close-out package"],
+  cameras: ["Site survey / FOV walk", "Mount cameras", "Pull camera drops", "Program NVR", "Client walkthrough"],
+  access_control: ["Site survey / door hardware", "Mount panel", "Install readers", "Program credentials", "Client training"],
+  wifi: ["Heat-map / placement review", "Mount APs", "Pull AP drops", "SSID and security", "Coverage verification"],
+  default: ["Site survey", "Perform work", "Test / verify", "Close-out"],
+};
