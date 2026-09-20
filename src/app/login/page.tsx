@@ -34,7 +34,6 @@ export default function LoginPage() {
   return (
     <AuthFrame
       title="Sign in"
-      subtitle="Your workspace loads from Supabase. New company data starts empty."
       footer={
         <>
           New user?{" "}

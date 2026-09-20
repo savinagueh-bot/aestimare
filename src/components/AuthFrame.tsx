@@ -10,7 +10,7 @@ export function AuthFrame({
   footer,
 }: {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   children: ReactNode;
   footer?: ReactNode;
 }) {
@@ -28,7 +28,7 @@ export function AuthFrame({
         </div>
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-xl">
           <h1 className="text-xl font-bold">{title}</h1>
-          <p className="mt-1 text-sm text-slate-400">{subtitle}</p>
+          {subtitle ? <p className="mt-1 text-sm text-slate-400">{subtitle}</p> : null}
           <div className="mt-5">{children}</div>
         </div>
         {footer ? <div className="mt-4 text-center text-sm text-slate-400">{footer}</div> : null}
