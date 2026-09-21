@@ -10,10 +10,7 @@ function appOrigin(req: Request) {
   return host ? `${proto}://${host}` : "http://localhost:3000";
 }
 
-async function sendResetEmail(to: string, link: string) {
-  const key = process.env.RESEND_API_KEY;
-  if (!key) return { ok: false as const, error: "RESEND_API_KEY is not set on the server." };
-  const from = process.env.EMAIL_FROM ?? "Iowa Structured Cabling <Info@Iowacabling.com>";
+async function postResend(key: string, from: string, to: string, link: string) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -29,10 +26,27 @@ async function sendResetEmail(to: string, link: string) {
     }),
   });
   const json = (await res.json().catch(() => ({}))) as { message?: string; name?: string };
-  if (!res.ok) {
-    return { ok: false as const, error: json.message ?? json.name ?? `Resend error ${res.status}` };
+  return { ok: res.ok, status: res.status, error: json.message ?? json.name };
+}
+
+async function sendResetEmail(to: string, link: string) {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return { ok: false as const, error: "RESEND_API_KEY is not set on the server." };
+  const branded = process.env.EMAIL_FROM ?? "Iowa Structured Cabling <Info@Iowacabling.com>";
+  const first = await postResend(key, branded, to, link);
+  if (first.ok) return { ok: true as const };
+  const unverified = /not verified|domain/i.test(first.error ?? "");
+  if (unverified) {
+    const retry = await postResend(key, "Aestimare <beth.t@example.com>", to, link);
+    if (retry.ok) return { ok: true as const };
+    return {
+      ok: false as const,
+      error:
+        retry.error ??
+        "Resend will not send from iowacabling.com until that domain is verified. Add the domain at resend.com/domains.",
+    };
   }
-  return { ok: true as const };
+  return { ok: false as const, error: first.error ?? `Resend error ${first.status}` };
 }
 
 export async function POST(req: Request) {
