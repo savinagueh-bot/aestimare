@@ -117,6 +117,16 @@ export async function localSignUp(input: {
   return { ok: true as const, session };
 }
 
+export async function localUpdatePassword(email: string, password: string) {
+  const accounts = readAccounts();
+  const key = email.trim().toLowerCase();
+  const match = accounts.find((a) => a.email.toLowerCase() === key);
+  if (!match) return { ok: false as const, error: "No account found for that email." };
+  match.passwordHash = await hashPassword(password);
+  writeAccounts(accounts.map((a) => (a.email.toLowerCase() === key ? match : a)));
+  return { ok: true as const };
+}
+
 export async function localSignIn(email: string, password: string) {
   const accounts = readAccounts();
   const match = accounts.find((a) => a.email.toLowerCase() === email.trim().toLowerCase());
