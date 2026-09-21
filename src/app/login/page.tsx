@@ -35,12 +35,19 @@ export default function LoginPage() {
     <AuthFrame
       title="Sign in"
       footer={
-        <>
-          New user?{" "}
-          <a href="/signup" className="font-semibold text-amber-400 hover:text-amber-300">
-            Create an account
-          </a>
-        </>
+        <div className="space-y-2">
+          <div>
+            <a href="/forgot-password" className="font-semibold text-amber-400 hover:text-amber-300">
+              Forgot password?
+            </a>
+          </div>
+          <div>
+            New user?{" "}
+            <a href="/signup" className="font-semibold text-amber-400 hover:text-amber-300">
+              Create an account
+            </a>
+          </div>
+        </div>
       }
     >
       {!isSupabaseConfigured() ? (
@@ -61,6 +68,11 @@ export default function LoginPage() {
         <Field label="Password">
           <input className={inputCls} type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </Field>
+        <div className="text-right">
+          <a href="/forgot-password" className="text-sm font-semibold text-amber-400 hover:text-amber-300">
+            Forgot password?
+          </a>
+        </div>
         {error ? <p className="text-sm text-rose-400">{error}</p> : null}
         <Btn type="submit" className="mt-1 w-full" disabled={busy || !email || !password}>
           {busy ? "Signing in…" : "Sign in"}
